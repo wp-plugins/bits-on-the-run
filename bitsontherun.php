@@ -17,7 +17,7 @@ function botr_fix_protocol($option) {
 }
 
 define('BOTR_PLUGIN_DIR', dirname(__FILE__));
-define('BOTR_PLUGIN_URL', botr_fix_protocol(get_option('siteurl')) . '/wp-content/plugins/bitsontherun');
+define('BOTR_PLUGIN_URL', botr_fix_protocol(get_option('siteurl')) . '/wp-content/plugins/bits-on-the-run');
 
 require_once(BOTR_PLUGIN_DIR . '/api.php');
 
