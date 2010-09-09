@@ -1,0 +1,114 @@
+.botr-error {
+    color: red;
+}
+
+#botr-video-box .inside {
+    margin: 0;
+}
+
+#botr-list-wrapper {
+    margin: 6px;
+}
+
+#botr-search-box {
+    width: 100%;
+    margin-bottom: 5px;
+    color: lightgray;
+    background: url(search.png) no-repeat right center;
+    padding-right: 20px;
+}
+
+#botr-search-box:focus {
+    color: black;
+}
+
+#botr-video-list li {
+    position: relative;
+    display: block;
+    margin-bottom: 1px;
+    padding: 1px 0 4px 45px;
+    background-repeat: no-repeat;
+    background-position: left top;
+    height: 25px;
+    cursor: pointer;
+}
+
+#botr-video-list li.botr-failed {
+    cursor: default;
+}
+
+#botr-video-list li.botr-odd {
+    background-color: #fff;
+}
+
+#botr-video-list li.botr-even {
+    background-color: #e8e8e8;
+}
+
+#botr-video-list li p {
+    padding-right: 7px;
+    height: 18px;
+    display: block;
+    overflow: hidden;
+}
+
+#botr-video-list button {
+    float: right;
+    margin: 2px;
+}
+
+#botr-upload-video {
+    background-color: #e9f2f8;
+    border-top: 1px solid #e0e2e4;
+    padding: 6px;
+}
+
+#botr-upload-video .botr-row {
+    position: relative;
+    clear: left;
+    width: 267px;
+    height: 28px;
+}
+
+#botr-upload-video .botr-row label {
+    position: absolute;
+    width: 30px;
+    top: 8px;
+    left: 3px;
+    color: gray;
+}
+
+#botr-upload-video .botr-row span {
+    position: relative;
+    padding-left: 35px;
+}
+
+#botr-upload-title {
+    width: 230px;
+}
+
+#botr-upload-file {
+    width: 140px;
+}
+
+#botr-upload-button {
+    float: right;
+    margin-top: 3px;
+}
+
+#botr-progress-bar {
+    background-color: #3a7ea2;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    display: none;
+}
+
+#botr-upload-message {
+    float: left;
+    width: 149px;
+}
+
+.botr-busy {
+    cursor: wait;
+}
