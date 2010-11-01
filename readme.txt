@@ -4,7 +4,7 @@ Tags: bitsontherun, botr, video, media
 Donate link: http://www.bitsontherun.com
 Requires at least: 2.7
 Tested up to: 3.0
-Stable tag: 0.3
+Stable tag: 0.4
 
 Upload videos to and embed videos from the Bits on the Run platform.
 
@@ -45,6 +45,10 @@ Yes, you can. Simply append a dash and the corresponding player key to video key
 in the quicktag. For example: [bitsontherun MdkflPz7-35rdi1pO].
 
 == Changelog ==
+
+= 0.4 =
+
+* Fixed Javascript for WP < 3.0, bind() didn't work in JQuery 1.2.6.
 
 = 0.3 =
 

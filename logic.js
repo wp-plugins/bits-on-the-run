@@ -367,35 +367,35 @@ jQuery(document).ready( function() {
         return;
     }
 
-    botr.widgets.search.bind({
-        click : function () {
-            var query = jQuery.trim(jQuery(this).val());
+    botr.widgets.search.click( function () {
+        var query = jQuery.trim(jQuery(this).val());
 
-            if (query == 'Search videos') {
-                jQuery(this).val('');
-            }
+        if (query == 'Search videos') {
+            jQuery(this).val('');
+        }
 
-            jQuery(this).select();
-        },
-        keyup: function (event) {
-            var query = jQuery.trim(jQuery(this).val());
+        jQuery(this).select();
+    });
 
-            if (botr.search_timer_id !== null) {
-                window.clearTimeout(botr.search_timer_id);
-            }
+    botr.widgets.search.keyup( function () {
+        var query = jQuery.trim(jQuery(this).val());
 
-            botr.search_timer_id = window.setTimeout( function () {
-                botr.search_timer_id = null;
-                botr.list_videos(query);
-            }, botr.search_timeout);
-        },
-        blur : function () {
-            var query = jQuery.trim(jQuery(this).val());
+        if (botr.search_timer_id !== null) {
+            window.clearTimeout(botr.search_timer_id);
+        }
 
-            if (query == '') {
-                jQuery(this).val('Search videos');
-            }
-        },
+        botr.search_timer_id = window.setTimeout( function () {
+            botr.search_timer_id = null;
+            botr.list_videos(query);
+        }, botr.search_timeout);
+    });
+
+    botr.widgets.search.blur( function () {
+        var query = jQuery.trim(jQuery(this).val());
+
+        if (query == '') {
+            jQuery(this).val('Search videos');
+        }
     });
 
     botr.uploader = new AjaxUpload(botr.widgets.browse, {
