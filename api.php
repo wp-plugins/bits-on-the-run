@@ -129,7 +129,7 @@
                     $response = "Error: No cURL library";
             }
 
-            if (err_no == 0) {
+            if ($err_no == 0) {
                 return unserialize($response);
             } else {
                 return "Error #" . $err_no . ": " . $err_msg;
