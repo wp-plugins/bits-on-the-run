@@ -16,6 +16,8 @@ viewers to steal your content.
 
 == Installation ==
 
+0. Make sure your Wordpress install is running on PHP5, the plugin will not 
+   work with earlier versions.
 1. Unpack the zip-file and put the resulting folder in the wp-content/plugins
    directory of your Wordpress install.
 2. Login as Wordpress admin.
