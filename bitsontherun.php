@@ -4,7 +4,7 @@ Plugin Name: Bits on the Run
 Plugin URI: http://www.bitsontherun.com/
 Description: This plugin allows you to easily upload and embed videos using the Bits on the Run platform. The embedded video links can be signed, making it harder for viewers to steal your content.
 Author: Koen Vossen and Remco van Bree
-Version: 0.4
+Version: 0.5
 */
 
 /* Use https:// instead of http:// for SSL requests. */
@@ -305,6 +305,7 @@ function botr_create_js_embed($arguments) {
 
     $content_mask = get_option('botr_content_mask');
     $url = "http://$content_mask/$path?exp=$expires&sig=$signature";
+    $url = botr_fix_protocol($url);
 
     return "<script type='text/javascript' src='$url'></script>";
 }
