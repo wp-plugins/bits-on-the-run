@@ -3,8 +3,8 @@
 Plugin Name: Bits on the Run
 Plugin URI: http://www.bitsontherun.com/
 Description: This plugin allows you to easily upload and embed videos using the Bits on the Run platform. The embedded video links can be signed, making it harder for viewers to steal your content.
-Author: Koen Vossen and Remco van Bree
-Version: 0.5
+Author: LongTail Video
+Version: 0.6
 */
 
 /* Use https:// instead of http:// for SSL requests. */
@@ -23,7 +23,7 @@ require_once(BOTR_PLUGIN_DIR . '/api.php');
 
 /* Default settings */
 define('BOTR_PLAYER', 'ALJ3XQCI');
-define('BOTR_TIMEOUT', '60');
+define('BOTR_TIMEOUT', '0');
 define('BOTR_CONTENT_MASK', 'content.bitsontherun.com');
 define('BOTR_NR_VIDEOS', '5');
 
@@ -260,7 +260,7 @@ function botr_timeout_setting() {
     $error = botr_validate_int('botr_timeout', $timeout, BOTR_TIMEOUT);
 
     echo "<input name='botr_timeout' id='botr_timeout' type='text' size='7' value='$timeout' />";
-    echo "<br />The duration in minutes for which a <a href='http://www.bitsontherun.com/documentation/content-server/security.html'>secured player</a> will be valid. Don't forget to enable <i>secure content</i> on your <a href='http://dashboard.bitsontherun.com/account/'>account page</a> if you want to use this feature.";
+    echo "<br />The duration in minutes for which a <a href='http://www.longtailvideo.com/support/bits-on-the-run/15986/secure-your-videos-with-signing'>signed player</a> will be valid. Set this to 0 (the default) if you don't use signing.";
 
     if ($error) {
         echo $error;
@@ -282,7 +282,7 @@ function botr_nr_videos_setting() {
 function botr_content_mask_setting() {
     $content_mask = get_option('botr_content_mask');
     echo "<input name='botr_content_mask' id='botr_content_mask' type='text' value='$content_mask' class='regular-text' />";
-    echo "<br />The <a href='http://www.bitsontherun.com/documentation/content-server/dns-masking.html'>DNS mask</a> of the BOTR content server.";
+    echo "<br />The <a href='http://www.longtailvideo.com/support/bits-on-the-run/21627/dns-mask-our-content-servers'>DNS mask</a> of the BOTR content server.";
 }
 
 function botr_replace_quicktags($content) {
@@ -297,16 +297,18 @@ function botr_replace_quicktags($content) {
 function botr_create_js_embed($arguments) {
     $video_hash = $arguments[1];
     $player_hash = $arguments[2] ? $arguments[2] : get_option('botr_player');
-    $path = "players/$video_hash-$player_hash.js";
-
-    $api_secret = get_option('botr_api_secret');
-    $expires = time() + 60 * intval(get_option('botr_timeout'));
-    $signature = md5("$path:$expires:$api_secret");
-
     $content_mask = get_option('botr_content_mask');
-    $url = "http://$content_mask/$path?exp=$expires&sig=$signature";
+    $timeout = intval(get_option('botr_timeout'));
+    $path = "players/$video_hash-$player_hash.js";
+    if($timeout < 1) {
+        $url = "http://$content_mask/$path";
+    } else {
+        $api_secret = get_option('botr_api_secret');
+        $expires = time() + 60 * $timeout;
+        $signature = md5("$path:$expires:$api_secret");
+        $url = "http://$content_mask/$path?exp=$expires&sig=$signature";
+    }
     $url = botr_fix_protocol($url);
-
     return "<script type='text/javascript' src='$url'></script>";
 }
 

@@ -1,10 +1,10 @@
 === Bits on the Run ===
-Contributors: kvsn
+Contributors: LongTail Video
 Tags: bitsontherun, botr, video, media
 Donate link: http://www.bitsontherun.com
 Requires at least: 2.7
-Tested up to: 3.0
-Stable tag: 0.5
+Tested up to: 3.1
+Stable tag: 0.6
 
 Upload videos to and embed videos from the Bits on the Run platform.
 
@@ -26,18 +26,18 @@ viewers to steal your content.
 4. Enter your API key and secret on the media settings page (you can find 
    these on your Bits on the Run account page).
 5. Change the rest of the settings to your liking. Don't forget to enable 
-   secure content on your Bits on the Run account page if you want to make use
+   secure content in your Bits on the Run account if you want to make use
    of the signed links.
 
-We also advise you to install the PHP cURL library. See
-http://php.net/manual/en/book.curl.php for more info, or ask your system
+We also advise you to install the PHP cURL library (usually already installed).
+See http://php.net/manual/en/book.curl.php for more info, or ask your system
 administrator.
 
 == Screenshots ==
 
 1. You can start uploading and embedding videos with the new Bits on the Run
    widget that will appear in the sidebar when you're editing a post. For more
-   detailed instructions, see [this tutorial](http://www.bitsontherun.com/tutorials/using-our-wordpress-plugin/).
+   detailed instructions, [see this tutorial](http://www.longtailvideo.com/support/bits-on-the-run/15959/using-our-wordpress-plugin).
 
 == Frequently Asked Questions ==
 
@@ -46,7 +46,18 @@ administrator.
 Yes, you can. Simply append a dash and the corresponding player key to video key
 in the quicktag. For example: [bitsontherun MdkflPz7-35rdi1pO].
 
+= Does this plugin work with caching solutions like WP-Supercache? =
+
+Yes, it does. However, you should disable the signing functionality of the plugin,
+since the caching might interfere with the signing timeout logic. Simply go to
+Settings > Media and set the BOTR signing timeout to 0.
+
 == Changelog ==
+
+= 0.6 =
+
+* Allowed for disabling of signing mechanism by setting timeout to 0. 
+* Made timeout=0 the default.
 
 = 0.5 =
 

@@ -361,7 +361,6 @@
                 'right' : 0,
                 'margin' : 0,
                 'padding' : 0,
-                'fontSize' : '480px',                
                 'cursor' : 'pointer'
             });            
 

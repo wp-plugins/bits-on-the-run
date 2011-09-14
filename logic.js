@@ -123,7 +123,7 @@ botr = {
         var params = {
             method : '/videos/list',
             result_limit : nr_videos,
-            order_by : 'date:desc',
+            order_by : 'date:desc'
         }
 
         if (query != '') {
