@@ -3,6 +3,7 @@
 }
 
 #botr-video-box .inside {
+    padding: 0;
     margin: 0;
 }
 
@@ -66,7 +67,7 @@
 #botr-upload-video .botr-row {
     position: relative;
     clear: left;
-    width: 267px;
+    width: 266px;
     height: 28px;
 }
 
@@ -84,16 +85,24 @@
 }
 
 #botr-upload-title {
-    width: 230px;
+    width: 228px;
 }
 
 #botr-upload-file {
-    width: 140px;
+    width: 134px;
+    margin: 0;
 }
 
 #botr-upload-button {
-    float: right;
-    margin-top: 3px;
+  float: right;
+  margin-top: 3px;
+  margin-right: 11px;
+}
+
+#botr-upload-browse {
+  display: inline-block;
+  text-align: center;
+  width: 70px;
 }
 
 #botr-progress-bar {
