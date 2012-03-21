@@ -7,17 +7,7 @@ Author: LongTail Video
 Version: 0.6
 */
 
-/* Use https:// instead of http:// for SSL requests. */
-function botr_fix_protocol($option) {
-    if($_SERVER["HTTPS"] == "on") {
-        $option = preg_replace('|/+$|', '', $option);
-        $option = preg_replace('|http://|', 'https://', $option);
-    }
-    return $option;
-}
-
 define('BOTR_PLUGIN_DIR', dirname(__FILE__));
-define('BOTR_PLUGIN_URL', botr_fix_protocol(get_option('siteurl')) . '/wp-content/plugins/bits-on-the-run');
 
 require_once(BOTR_PLUGIN_DIR . '/api.php');
 
@@ -72,7 +62,9 @@ HTML;
 }
 
 function botr_admin_head() {
-    $plugin_url = BOTR_PLUGIN_URL;
+    $ajaxupload_url = plugins_url('ajaxupload.js', __FILE__);
+    $logic_url = plugins_url('logic.js', __FILE__);
+    $plugin_url = plugins_url('', __FILE__);
     $content_mask = get_option('botr_content_mask');
     $nr_videos = get_option('botr_nr_videos');
 
@@ -80,8 +72,8 @@ function botr_admin_head() {
 
 <link rel="stylesheet" href="$plugin_url/style.css" type="text/css" media="screen" />
 
-<script type="text/javascript" src="$plugin_url/ajaxupload.js"></script>
-<script type="text/javascript" src="$plugin_url/logic.js"></script>
+<script type="text/javascript" src="$ajaxupload_url"></script>
+<script type="text/javascript" src="$logic_url"></script>
 
 <script type='text/javascript'>
     botr.plugin_url = '$plugin_url';
