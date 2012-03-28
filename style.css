@@ -59,6 +59,8 @@
 }
 
 #botr-upload-video {
+    width: auto;
+    margin: 0;
     background-color: #e9f2f8;
     border-top: 1px solid #e0e2e4;
     padding: 6px;
@@ -94,15 +96,15 @@
 }
 
 #botr-upload-button {
-  float: right;
-  margin-top: 3px;
-  margin-right: 11px;
+    float: right;
+    margin-top: 3px;
+    margin-right: 11px;
 }
 
 #botr-upload-browse {
-  display: inline-block;
-  text-align: center;
-  width: 70px;
+    display: inline-block;
+    text-align: center;
+    width: 70px;
 }
 
 #botr-progress-bar {

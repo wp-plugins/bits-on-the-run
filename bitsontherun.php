@@ -16,6 +16,7 @@ define('BOTR_PLAYER', 'ALJ3XQCI');
 define('BOTR_TIMEOUT', '0');
 define('BOTR_CONTENT_MASK', 'content.bitsontherun.com');
 define('BOTR_NR_VIDEOS', '5');
+define('BOTR_SHOW_WIDGET', 'false');
 
 
 function botr_init() {
@@ -36,6 +37,7 @@ function botr_activate() {
     add_option('botr_timeout', BOTR_TIMEOUT);
     add_option('botr_content_mask', BOTR_CONTENT_MASK);
     add_option('botr_nr_videos', BOTR_NR_VIDEOS);
+    add_option('botr_show_widget', BOTR_SHOW_WIDGET);
 }
 
 function botr_get_api_instance() {
@@ -85,14 +87,16 @@ HTML;
 }
 
 function botr_add_video_box() {
-    if (botr_test_api_keys() == 'valid') {
-        if(function_exists('add_meta_box')) {
-            add_meta_box('botr-video-box', 'Bits on the Run', 'botr_inner_custom_box', 'post', 'side', 'high');
-            add_meta_box('botr-video-box', 'Bits on the Run', 'botr_inner_custom_box', 'page', 'side', 'high');
-        } else {
-            add_action('dbx_post_sidebar', 'botr_old_custom_box');
-            add_action('dbx_page_sidebar', 'botr_old_custom_box');
-        }
+    if(get_option('botr_show_widget') == 'true') {
+      if (botr_test_api_keys() == 'valid') {
+          if(function_exists('add_meta_box')) {
+              add_meta_box('botr-video-box', 'Bits on the Run', 'botr_inner_custom_box', 'post', 'side', 'high');
+              add_meta_box('botr-video-box', 'Bits on the Run', 'botr_inner_custom_box', 'page', 'side', 'high');
+          } else {
+              add_action('dbx_post_sidebar', 'botr_old_custom_box');
+              add_action('dbx_page_sidebar', 'botr_old_custom_box');
+          }
+      }
     }
 }
 
@@ -154,6 +158,7 @@ function botr_add_settings() {
     add_settings_field('botr_timeout', 'Timeout for signed links', 'botr_timeout_setting', 'media', 'botr_setting_section');
     add_settings_field('botr_content_mask', 'Content DNS mask', 'botr_content_mask_setting', 'media', 'botr_setting_section');
     add_settings_field('botr_player', 'Default player', 'botr_player_setting', 'media', 'botr_setting_section');
+    add_settings_field('botr_show_widget', 'Show the widget', 'botr_show_widget_setting', 'media', 'botr_setting_section');
 
     register_setting('media', 'botr_api_key');
     register_setting('media', 'botr_api_secret');
@@ -161,10 +166,11 @@ function botr_add_settings() {
     register_setting('media', 'botr_timeout');
     register_setting('media', 'botr_content_mask');
     register_setting('media', 'botr_player');
+    register_setting('media', 'botr_show_widget');
 }
 
 function botr_setting_section_header() {
-    echo "<a name='botr'></a>";
+    
 }
 
 function botr_test_api_keys($do_test_call = false) {
@@ -225,7 +231,7 @@ function botr_player_setting() {
         echo "</select>";
 
         echo "<br />The <a href='http://dashboard.bitsontherun.com/players/'>player</a> to use for embedding the videos.";
-        echo " If you want to override the default player for a given video, simply append a dash and the corresponding player key to video key in the quicktag. For example: <i>[bitsontherun MdkflPz7-35rdi1pO]</i>.";
+        echo " If you want to override the default player for a given video, simply append a dash and the corresponding player key to video key in the quicktag. For example: <code>[bitsontherun MdkflPz7-35rdi1pO]</code>.";
     } else {
         if ($result == 'absent') {
             $message = "You have to save your API key and secret before you can set this option.";
@@ -277,6 +283,15 @@ function botr_content_mask_setting() {
     echo "<br />The <a href='http://www.longtailvideo.com/support/bits-on-the-run/21627/dns-mask-our-content-servers'>DNS mask</a> of the BOTR content server.";
 }
 
+function botr_show_widget_setting() {
+    $show_widget = get_option('botr_show_widget');
+    echo "<input name='botr_show_widget' id='botr_show_widget' type='checkbox' ";
+    checked('true', $show_widget);
+    echo " value='true' /> ";
+    echo "<label for='botr_show_widget'>Show the Bits on the Run widget on the authoring page.</label><br />";
+    echo "Note that the widget is also accessible from the media manager";
+}
+
 function botr_replace_quicktags($content) {
     if (botr_test_api_keys() == 'valid') {
         $regex = '/\[bitsontherun ([0-9a-z]{8})(?:[-_])?([0-9a-z]{8})?\]/si';
@@ -303,5 +318,55 @@ function botr_create_js_embed($arguments) {
     $url = botr_fix_protocol($url);
     return "<script type='text/javascript' src='$url'></script>";
 }
+
+function botr_media_menu($tabs) {
+    $newtab = array('botr' => 'Bits on the Run');
+    return array_merge($tabs, $newtab);
+}
+add_filter('media_upload_tabs', 'botr_media_menu');
+
+function media_botr_page() {
+    media_upload_header();
+
+    echo <<<HTML
+        <form class="media-upload-form type-form validate" id="video-form" enctype="multipart/form-data" method="post" action="">
+          <h3 class="media-title">Embed videos from Bits on the Run</h3>
+          <div id="media-items">
+            <div id="botr-video-box" class="media-item">
+              <div id='botr-list-wrapper'>
+                <input type='text' value='Search videos' id='botr-search-box' />
+                <ul id='botr-video-list'>
+                </ul>
+              </div>
+              <fieldset id='botr-upload-video'>
+                <div class='botr-row'>
+                  <label for='botr-upload-title'>Title</label>
+                  <span>
+                    <input type='text' id='botr-upload-title' name='botr-upload-title' />
+                  </span>
+                </div>
+                <div class='botr-row'>
+                  <label for='botr-upload-file'>File</label>
+                  <span>
+                    <a href='#' id='botr-upload-browse' class='button'>Choose file</a>
+                    <input type='text' id='botr-upload-file' name='botr-upload-file' value='no file selected' disabled='disabled' />
+                    <input type='text' id='botr-progress-bar' value='0%' readonly='readonly' />
+                  </span>
+                </div>
+                <div class='botr-row'>
+                    <p id='botr-upload-message'></p>
+                    <button type='submit' id='botr-upload-button' class='button-primary'>Upload video</button>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </form>
+HTML;
+}
+
+function botr_media_handle() {
+    return wp_iframe('media_botr_page');
+}
+add_action('media_upload_botr', 'botr_media_handle');
 
 ?>

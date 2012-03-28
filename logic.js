@@ -57,20 +57,15 @@ botr = {
     return 'http://' + botr.content_mask + '/thumbs/' + video_hash + '-' + width + '.jpg';
   },
 
-  // Insert a string into the post editor at the current position of the cursor.
-  insert_editor_content : function (value) {
-    var editor = jQuery('#content');
-    if (editor.css('display') == 'none') {
-      tinyMCE.execCommand("mceInsertContent", false, value);
-    } else {
-      edInsertContent(edCanvas, value);
-    }
-  },
-
   // Insert the quicktag into the editor box.
   insert_quicktag : function (video_hash) {
     var quicktag = '[bitsontherun ' + video_hash  + ']';
-    botr.insert_editor_content(quicktag);
+    if(botr.mediaPage) {
+      parent.send_to_editor(quicktag);
+    }
+    else {
+      window.send_to_editor(quicktag);
+    }
     return false;
   },
 
@@ -392,6 +387,8 @@ $(document).ready(function() {
     button : $('#botr-upload-button'),
     progress : $('#botr-progress-bar'),
   };
+  // Check whether we are on the insert page or on the media page.
+  botr.mediaPage = botr.widgets.box.hasClass('media-item');
 
   if (botr.widgets.box.length == 0) {
     return;
