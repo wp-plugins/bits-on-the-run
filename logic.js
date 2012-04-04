@@ -72,8 +72,9 @@ botr = {
   /* Make a list item for a video.
    * The `video` parameter must be a dict as returned by the /videos/list call.
    */
-  make_list_item : function (video, css_class) {
-    var thumb_url, js;
+  make_video_list_item : function (video) {
+    var thumb_url, js, make_quicktag;
+    var css_class = botr.widgets.list.children().length % 2 ? 'botr-odd' : 'botr-even';
     if (video.status == 'ready') {
       thumb_url = botr.make_thumb_url(video.key);
       make_quicktag = function(video_key) {
@@ -101,12 +102,36 @@ botr = {
     var elt = $('<li>').attr('id', 'botr-video-' + video.key);
     elt.addClass(css_class);
     elt.css('background-image', 'url(' + thumb_url + ')');
-    if(make_quicktag) {
+    if (make_quicktag) {
       // If we can embed, add the functionality to the item
       elt.click(make_quicktag);
-      $('<button>').addClass('button botr-suffix').text('Add').appendTo(elt);
+      $('<button>').attr('type', 'button').addClass('button botr-suffix').text('Add').appendTo(elt);
     }
     $('<p>').text(video.title).appendTo(elt);
+
+    return elt;
+  },
+  
+  make_channel_list_item : function (channel) {
+    var thumb_url, js, make_quicktag;
+    var css_class = botr.widgets.list.children().length % 2 ? 'botr-odd' : 'botr-even';
+    thumb_url = botr.plugin_url + '/channel-' + botr.thumb_width + '.png';
+    make_quicktag = function(video_key) {
+      return function() {
+        botr.insert_quicktag(video_key);
+      }
+    }(channel.key);
+
+    // Create the list item
+    var elt = $('<li>').attr('id', 'botr-channel-' + channel.key);
+    elt.addClass(css_class);
+    elt.css('background-image', 'url(' + thumb_url + ')');
+    if (make_quicktag) {
+      // If we can embed, add the functionality to the item
+      elt.click(make_quicktag);
+      $('<button>').attr('type', 'button').addClass('button botr-suffix').text('Add').appendTo(elt);
+    }
+    $('<p>').text(channel.title + ' ').append($('<em>').text('(playlist)')).appendTo(elt);
 
     return elt;
   },
@@ -122,7 +147,7 @@ botr = {
   /* List the most recently uploaded videos. If query is supplied, we will only show
    * those that match the given string.
    */
-  list_videos : function (query, nr_videos) {
+  list_videos : function (query, nr_videos, callback) {
     botr.show_wait_cursor();
 
     if (query === undefined || query == 'Search videos') {
@@ -150,12 +175,9 @@ botr = {
       dataType : 'json',
       success : function (data) {
         if (data && data.status == 'ok') {
-          botr.widgets.list.empty();
-
           if (data.videos.length) {
             for (var i = 0; i < data.videos.length; i += 1) {
-              var cls = i % 2 ? 'botr-odd' : 'botr-even';
-              var elt = botr.make_list_item(data.videos[i], cls);
+              var elt = botr.make_video_list_item(data.videos[i]);
               botr.widgets.list.append(elt);
             }
 
@@ -163,8 +185,9 @@ botr = {
               botr.thumb_timer_id = window.setInterval(botr.poll_thumb_progress, botr.thumb_poll_interval);
             }
           }
-          else {
-            botr.widgets.list.html(botr.tag('p', 'No videos have been found.'));
+          
+          if (callback !== undefined) {
+            callback(data.videos.length);
           }
         }
         else {
@@ -179,6 +202,117 @@ botr = {
         botr.show_normal_cursor();
       }
     });
+  },
+  
+  list_channels : function (query, nr_videos, callback) {
+    botr.show_wait_cursor();
+
+    if (query === undefined || query == 'Search videos') {
+      query = '';
+    }
+
+    if (nr_videos === undefined) {
+      nr_videos = botr.nr_videos;
+    }
+
+    var params = {
+      method : '/channels/list',
+      result_limit : nr_videos
+    }
+
+    if (query != '') {
+      params['text'] = query;
+    }
+
+    $.ajax({
+      type : 'GET',
+      url : botr.api_proxy,
+      data : params,
+      dataType : 'json',
+      success : function (data) {
+        if (data && data.status == 'ok') {
+          if (data.channels.length) {
+            for (var i = 0; i < data.channels.length; i += 1) {
+              var elt = botr.make_channel_list_item(data.channels[i]);
+              botr.widgets.list.append(elt);
+            }
+          }
+          
+          if (callback !== undefined) {
+            callback(data.channels.length);
+          }
+        }
+        else {
+          var msg = data ? 'API error: ' + data.message : 'No response from API.';
+          botr.widgets.list.html(botr.tag('p', msg));
+        }
+
+        botr.show_normal_cursor();
+      },
+      error : function (request, message, error) {
+        botr.widgets.list.html(botr.tag('p', 'AJAX error: ' + message));
+        botr.show_normal_cursor();
+      }
+    });
+  },
+  
+  list: function(query, channels, videos, nr_videos)
+  {
+    if (query === undefined) {
+      query = $.trim(botr.widgets.search.val());
+    }
+    if (nr_videos === undefined) {
+      nr_videos = botr.nr_videos;
+    }
+    if (channels === undefined) {
+      channels = true;
+    }
+    if (videos === undefined) {
+      videos = true;
+    }
+    // Handle the "playlist:" syntax
+    var m;
+    if (m = query.match(/(playlist|channel):(.*)/)) {
+      videos = false;
+      channels = true;
+      query = m[2];
+    }
+    
+    
+    botr.widgets.list.empty();
+    
+    var doDescribeEmpty = function()
+    {
+      if (botr.widgets.list.children().length == 0)
+      {
+        if (channels && videos) {
+          botr.widgets.list.html('No playlists or videos have been found.');
+        } else if (channels) {
+          botr.widgets.list.html('No playlists have been found.');
+        } else if (videos) {
+          botr.widgets.list.html('No videos have been found.');
+        } else {
+          botr.widgets.list.html('Please search for videos or playlists.');
+        }
+      }
+    };
+    var doChannels = function(num) {
+      if (num < nr_videos) {
+        botr.list_channels(query, nr_videos - num, doDescribeEmpty);
+      }
+    };
+    var doVideos = function(num) {
+      if (num < nr_videos) {
+        botr.list_videos(query, nr_videos - num, doChannels);
+      }
+    };
+    if (videos) {
+      doVideos(0);
+    } else if (channels) {
+      doChannels(0);
+    } else {
+      doDescribeEmpty();
+    }
   },
 
   // Poll API for status of thumbnails.
@@ -351,7 +485,7 @@ botr = {
 
         if (data.state == 'done' || data.state == 'error') {
           botr.reset_upload();
-          botr.list_videos();
+          botr.list();
         }
         else {
           if (data.state == 'uploading') {
@@ -403,18 +537,32 @@ $(document).ready(function() {
 
     $(this).select();
   });
-
-  botr.widgets.search.keyup(function() {
-    var query = $.trim($(this).val());
-
-    if (botr.search_timer_id !== null) {
-      window.clearTimeout(botr.search_timer_id);
+  
+  botr.widgets.search.keydown(function(e) {
+    // Ignore enter, but immediately submit
+    if(e.keyCode == 13) {
+      var query = $.trim($(this).val());
+      if (botr.search_timer_id !== null) {
+        window.clearTimeout(botr.search_timer_id);
+      }
+      botr.list(query);
+      return false;
     }
+  });
 
-    botr.search_timer_id = window.setTimeout(function () {
-      botr.search_timer_id = null;
-      botr.list_videos(query);
-    }, botr.search_timeout);
+  botr.widgets.search.keyup(function(e) {
+    if(e.keyCode != 13) {
+      var query = $.trim($(this).val());
+
+      if (botr.search_timer_id !== null) {
+        window.clearTimeout(botr.search_timer_id);
+      }
+
+      botr.search_timer_id = window.setTimeout(function () {
+        botr.search_timer_id = null;
+        botr.list(query);
+      }, botr.search_timeout);
+    }
   });
 
   botr.widgets.search.blur(function() {
@@ -438,7 +586,7 @@ $(document).ready(function() {
 
   botr.widgets.button.click(botr.upload_video);
 
-  botr.list_videos();
+  botr.list();
 });
 
 })(jQuery);

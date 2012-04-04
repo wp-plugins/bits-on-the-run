@@ -14,6 +14,7 @@ function botr_json_error($message) {
 
 $BOTR_PROXY_METHODS = array(
     '/videos/list',
+    '/channels/list',
     '/videos/create',
     '/videos/thumbnails/show',
 );
