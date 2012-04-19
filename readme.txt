@@ -22,7 +22,7 @@ Bits on the Run is an online video platform, developed by LongTail Video, built
 for website owners, web developers, and video producers to upload, manage,
 customize and publish online video content with ease.
 
-=== Key Features ===
+== Key Features ==
 
 * Fast video streaming for playback in a video player, in both HTML5 and Flash modes
 * Inline search field available to locate specific videos within your video library
