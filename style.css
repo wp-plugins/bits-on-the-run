@@ -3,7 +3,6 @@
 }
 
 #botr-video-box .inside {
-    padding: 0;
     margin: 0;
 }
 
@@ -59,8 +58,6 @@
 }
 
 #botr-upload-video {
-    width: auto;
-    margin: 0;
     background-color: #e9f2f8;
     border-top: 1px solid #e0e2e4;
     padding: 6px;
@@ -69,7 +66,7 @@
 #botr-upload-video .botr-row {
     position: relative;
     clear: left;
-    width: 266px;
+    width: 267px;
     height: 28px;
 }
 
@@ -87,24 +84,16 @@
 }
 
 #botr-upload-title {
-    width: 228px;
+    width: 230px;
 }
 
 #botr-upload-file {
-    width: 134px;
-    margin: 0;
+    width: 140px;
 }
 
 #botr-upload-button {
     float: right;
     margin-top: 3px;
-    margin-right: 11px;
-}
-
-#botr-upload-browse {
-    display: inline-block;
-    text-align: center;
-    width: 70px;
 }
 
 #botr-progress-bar {

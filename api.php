@@ -1,18 +1,17 @@
 <?php
-
-    /* ----------------------------------------------------------------------------
+    /*-----------------------------------------------------------------------------
      * PHP API kit for the Bits on the Run API
      *
      * Author:      Sergey Lashin
      * Copyright:   (c) 2009 Bits on the Run
-     * License:     GNU Lesser General Public License, version 3
--    *              http://www.gnu.org/licenses/lgpl-3.0.txt
+     * Licence:     GNU Lesser General Public License, version 3
+     *              http://www.gnu.org/licenses/lgpl-3.0.txt
      *
      * Version:     1.2
      * Updated:     Tue Jun 30 10:05:02 CEST 2009
      *
      * For the System API documentation see http://docs.bitsontherun.com/system-api
-     * ----------------------------------------------------------------------------
+     *-----------------------------------------------------------------------------
      */
 
     class BotrAPI {

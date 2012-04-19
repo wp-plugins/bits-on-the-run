@@ -36,10 +36,8 @@ administrator.
 == Screenshots ==
 
 1. You can start uploading and embedding videos with the new Bits on the Run
-   widget that will appear in the "add media" window. If you enabled the
-   "Show widget" setting, the widget will also appear in the side bar when
-   you're editing a post. For more detailed instructions, 
-   [see this tutorial](http://www.longtailvideo.com/support/bits-on-the-run/15959/using-our-wordpress-plugin).
+   widget that will appear in the sidebar when you're editing a post. For more
+   detailed instructions, [see this tutorial](http://www.longtailvideo.com/support/bits-on-the-run/15959/using-our-wordpress-plugin).
 
 == Frequently Asked Questions ==
 
