@@ -1,6 +1,11 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../../../wp-config.php');
+$path = dirname(__FILE__);
+while(!is_file($path . '/wp-config.php'))
+{
+  $path = dirname($path);
+}
+require_once($path . '/wp-config.php');
 
 function botr_json_error($message) {
     $message = json_encode($message);
@@ -9,6 +14,7 @@ function botr_json_error($message) {
 
 $BOTR_PROXY_METHODS = array(
     '/videos/list',
+    '/channels/list',
     '/videos/create',
     '/videos/thumbnails/show',
 );
