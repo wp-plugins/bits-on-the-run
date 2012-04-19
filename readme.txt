@@ -4,7 +4,6 @@ Tags: bitsontherun, botr, video, media
 Donate link: http://www.bitsontherun.com
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 0.7
 
 Upload videos to and embed videos from the Bits on the Run platform.
 
