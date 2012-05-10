@@ -187,7 +187,7 @@ function botr_api_key_setting() {
 function botr_api_secret_setting() {
   $botr_api_secret = get_option('botr_api_secret');
   echo "<input name='botr_api_secret' size='24' maxlength='24' type='text' value='$botr_api_secret' />";
-  echo "<br />You can find the API key and secret on your Bits on the Run <a href='http://dashboard.bitsontherun.com/account/'>account page</a>.";
+  echo "<br />You can find the API key and secret on your Bits on the Run <a href='http://dashboard.bitsontherun.com/settings/properties/'>account page</a>.";
 
   if ($botr_api_secret && strlen($botr_api_secret) != 24) {
     echo "<br /><span class='botr-error'>Your API secret should be 24 characters long.</span>";
