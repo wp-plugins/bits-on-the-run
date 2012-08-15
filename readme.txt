@@ -4,7 +4,7 @@ Tags: bitsontherun, botr, video, media
 Donate link: http://www.bitsontherun.com
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 0.7
+Stable tag: 1.0
 
 Upload videos to and embed videos from the Bits on the Run platform.
 
@@ -53,11 +53,11 @@ Note: This module requires PHP5.
 2. Login as Wordpress admin.
 3. Go the the plugins page, the Bits on the Run plugin should be visible.
    Click "activate" to enable the plugin.
-4. Enter your API key and secret on the media settings page (you can find 
-   the key and secret on your Bits on the Run account page).
-5. Change the rest of the settings to your liking. Don't forget to enable 
-   secure content in your Bits on the Run account if you want to make use
-   of the signed links.
+4. Click the "log in" link on the media settings page to log into your
+   Bits on the Run account. Alternatively, click "sign up" to create a new
+   account directly from Wordpress.
+5. Change the settings to your liking. Don't forget to enable secure content in
+   your Bits on the Run account if you want to make use of the signed links.
    It is also possible to enable the widget as a box inside the authoring
    environment, in addition to the "Add media" window.
 
@@ -92,6 +92,12 @@ Yes, you can. In order to do this, simply write "playlist:" (without the quotes)
 in front of your search query in the widget.
 
 == Changelog ==
+
+= 1.0 =
+
+* Replaced the API key / secret settings with a login form.
+* Added in-application signup.
+* Added link to the dashboard in the widget.
 
 = 0.7 =
 

@@ -123,3 +123,8 @@
 .botr-busy {
     cursor: wait;
 }
+
+.botr-dashboard-link {
+    display: block;
+    margin: 6px;
+}
