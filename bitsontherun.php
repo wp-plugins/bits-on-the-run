@@ -4,7 +4,7 @@ Plugin Name: Bits on the Run
 Plugin URI: http://www.bitsontherun.com/
 Description: This plugin allows you to easily upload and embed videos using the Bits on the Run platform. The embedded video links can be signed, making it harder for viewers to steal your content.
 Author: LongTail Video
-Version: 1.0
+Version: 1.1
 */
 
 define('BOTR_PLUGIN_DIR', dirname(__FILE__));
