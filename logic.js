@@ -6,22 +6,18 @@ botr = {
 
   // Poll server every given number of milliseconds for upload progress info.
   upload_poll_interval : 2000,
+  
+  // The chunk size for resumable uploads.
+  upload_chunk_size : 2 * 1024 * 1024,
 
   // Poll API every given number of milliseconds for thumbnail status.
   thumb_poll_interval : 5000,
-
-  // Total width of progress bar.
-  total_progress_width : 230,
-
-  // Minimum width of progress bar.
-  min_progress_width : 40,
 
   // Width of video thumbnails.
   thumb_width : 40,
 
   // Timers.
   search_timer_id : null,
-  upload_timer_id : null,
   thumb_timer_id : null,
 
   // Apparently, there's no built-in javascript method to escape html entities.
@@ -105,13 +101,12 @@ botr = {
     if (make_quicktag) {
       // If we can embed, add the functionality to the item
       elt.click(make_quicktag);
-      $('<button>').attr('type', 'button').addClass('button botr-suffix').text('Add').appendTo(elt);
     }
     $('<p>').text(video.title).appendTo(elt);
 
     return elt;
   },
-  
+
   make_channel_list_item : function (channel) {
     var thumb_url, js, make_quicktag;
     var css_class = botr.widgets.list.children().length % 2 ? 'botr-odd' : 'botr-even';
@@ -129,7 +124,6 @@ botr = {
     if (make_quicktag) {
       // If we can embed, add the functionality to the item
       elt.click(make_quicktag);
-      $('<button>').attr('type', 'button').addClass('button botr-suffix').text('Add').appendTo(elt);
     }
     $('<p>').text(channel.title + ' ').append($('<em>').text('(playlist)')).appendTo(elt);
 
@@ -161,7 +155,8 @@ botr = {
     var params = {
       method : '/videos/list',
       result_limit : nr_videos,
-      order_by : 'date:desc'
+      order_by : 'date:desc',
+      random : Math.random()
     }
 
     if (query != '') {
@@ -185,7 +180,7 @@ botr = {
               botr.thumb_timer_id = window.setInterval(botr.poll_thumb_progress, botr.thumb_poll_interval);
             }
           }
-          
+
           if (callback !== undefined) {
             callback(data.videos.length);
           }
@@ -203,7 +198,7 @@ botr = {
       }
     });
   },
-  
+
   list_channels : function (query, nr_videos, callback) {
     botr.show_wait_cursor();
 
@@ -217,7 +212,8 @@ botr = {
 
     var params = {
       method : '/channels/list',
-      result_limit : nr_videos
+      result_limit : nr_videos,
+      random : Math.random()
     }
 
     if (query != '') {
@@ -237,7 +233,7 @@ botr = {
               botr.widgets.list.append(elt);
             }
           }
-          
+
           if (callback !== undefined) {
             callback(data.channels.length);
           }
@@ -255,9 +251,8 @@ botr = {
       }
     });
   },
-  
-  list: function(query, channels, videos, nr_videos)
-  {
+
+  list: function(query, channels, videos, nr_videos) {
     if (query === undefined) {
       query = $.trim(botr.widgets.search.val());
     }
@@ -277,10 +272,9 @@ botr = {
       channels = true;
       query = m[2];
     }
-    
-    
+
     botr.widgets.list.empty();
-    
+
     var doDescribeEmpty = function()
     {
       if (botr.widgets.list.children().length == 0)
@@ -329,7 +323,7 @@ botr = {
           url : botr.api_proxy,
           data : {
             method : '/videos/thumbnails/show',
-            video_key : video_key,
+            video_key : video_key
           },
           dataType : 'json',
           success : function (data) {
@@ -366,160 +360,174 @@ botr = {
       botr.thumb_timer_id = null;
     }
   },
-
-  // Reset upload timer and widgets.
-  reset_upload : function (data) {
-    if (botr.upload_timer_id !== null) {
-      window.clearTimeout(botr.upload_timer_id);
-      botr.upload_timer_id = null;
-    }
-
-    botr.widgets.title.val('');
-    botr.widgets.file.val('no file selected');
-
-    /* For some reason, the damn server always returns
-      state 'error' with status 302 (due to redirect),
-      so we can't be sure upload succeeded. Whatever.
-
-      Of course, we'd like to do the following:
-
-      if (data.state == 'done') {
-        botr.widgets.message.text('Upload successful');
-      }
-      else {
-        botr.widgets.message.text('Upload failed');
-      }
-    */
-
-    botr.widgets.progress.css('display', 'none');
-    botr.widgets.browse.css('display', 'inline');
-    botr.widgets.file.css('display', 'inline');
-
-    botr.widgets.title.removeAttr('disabled');
-    botr.widgets.button.removeAttr('disabled');
-  },
-
-  // Upload a new video. First, we do a /videos/create call, then we start uploading.
-  upload_video : function () {
-    if (botr.widgets.file.val() == 'no file selected') {
-      botr.widgets.file.css('color', 'red');
-    }
-    else {
-      botr.show_wait_cursor();
-
-      botr.widgets.button.attr('disabled', 'disabled');
-      botr.widgets.title.attr('disabled', 'disabled');
-
-      botr.widgets.message.text('');
-
-      botr.widgets.progress.width(botr.min_progress_width);
-      botr.widgets.progress.val('0%');
-
-      botr.widgets.file.css('display', 'none');
-      botr.widgets.browse.css('display', 'none');
-      botr.widgets.progress.css('display', 'inline');
-
-      var data = { method : '/videos/create' };
-      var title = $.trim(botr.widgets.title.val());
-
-      if (title != '') {
-        data.title = title;
-      }
-
-      $.ajax({
-        type : 'GET',
-        url : botr.api_proxy,
-        data : data,
-        dataType : 'json',
-        success : function (data) {
-          if (data && data.status == 'ok') {
-            var poll_url = data.link.protocol + '://' + data.link.address + '/progress';
-            poll_url += '?' + $.param({token : data.link.query.token});
-            botr.upload_timer_id = window.setInterval(function () {
-              botr.poll_upload_progress(poll_url, data.link.query.key);
-            }, botr.upload_poll_interval);
-
-            var post_url = data.link.protocol + '://' + data.link.address + data.link.path;
-            var params = {
-              api_format : 'json',
-              key : data.link.query.key,
-              token : data.link.query.token,
-              key_in_path : false,
-              redirect_address : botr.api_proxy,
-              redirect_query : 'method=upload_ready',
-            };
-
-            post_url += '?' + $.param(params);
-
-            botr.uploader._settings.action = post_url;
-            botr.uploader.submit();
-            // Normal cursor is set again due to call to list_videos()
-            // after upload has been completed.
-          }
-          else {
-            var msg = data ? 'API error: ' + data.message : 'No response from API.';
-            botr.widgets.message.text(msg);
-            botr.reset_upload();
-            botr.show_normal_cursor();
-          }
-        },
-        error : function (request, message, error) {
-          botr.widgets.message.text('AJAX error: ' + message);
-          botr.show_normal_cursor();
-        }
+  
+  // Open a small window for file uploads
+  open_upload_window : function() {
+    var win = $('<div>')
+      .addClass('botr-upload-window postbox')
+      .appendTo('body')
+      .html(
+        '<div class="handlediv"><br /></div>\
+         <h3 class="hndle"><span>Bits on the Run Video Upload</span></h3>\
+         <div class="inside">\
+           <form action="" method="post" enctype="multipart/form-data">\
+             <p>\
+               <label>Title (optional): </label>\
+               <input type="text" class="botr-upload-title" name="title">\
+             </p>\
+             <p>\
+               <label>Video file: </label>\
+               <input type="file" class="botr-upload-file" name="file">\
+             </p>\
+             <input type="submit" class="botr-upload-submit button-primary" disabled="disabled" value="Upload">\
+             <div class="botr-message"></div>\
+             <div class="botr-progress-bar">\
+               <div class="botr-progress"></div>\
+             </div>\
+           </form>\
+         </div>');
+    win.find('form')
+      .submit(function(e) {
+        botr.upload_video(win);
+        return false;
+      })
+      .find('.botr-upload-file').change(function() {
+        $(this).parents(':eq(1)').find('.botr-upload-submit').removeAttr('disabled');
       });
-    }
-
+    win.children('.handlediv').click(function() {
+      var upload = win.data('upload');
+      if(upload) {
+        upload.cancel();
+        if(!upload.isResumable()) {
+          $(upload.getIframe()).remove();
+        }
+      }
+      win.remove();
+    });
+    win.draggable({handle: '.hndle'});
     return false;
   },
 
-  // Poll for progress info about video upload.
-  poll_upload_progress : function (poll_url, video_hash) {
-    $.ajax({
-      url : poll_url,
-      dataType : 'jsonp',
-      success : function (data) {
-        if (!data) {
-          return;
-        }
+  // Reset upload timer and widgets.
+  reset_upload : function (win) {
+    win.find('.botr-upload-title').val('').removeAttr('disabled');
+    win.find('.botr-upload-file').val('').removeAttr('disabled');
+    win.find('.botr-upload-submit').show();
+    win.find('.botr-pause').remove();
+    
+    win.removeClass('botr-busy');
+  },
 
-        if (data.state == 'done' || data.state == 'error') {
-          botr.reset_upload();
-          botr.list();
+  // Upload a new video. First, we do a /videos/create call, then we start uploading.
+  upload_video : function (win) {
+    var title = $(win.find('input').get(0));
+    win.addClass('botr-busy');
+
+    if(!$.browser.msie) {
+      // IE will not submit the form if even one property of the file input has changed.
+      win.find('input').attr('disabled', 'disabled');
+    }
+    else {
+      win.find('input[type!="file"]').attr('disabled', 'disabled');
+    }
+
+    win.find('.botr-message').text("");
+
+    var data = {
+      method : '/videos/create',
+      // IE tends to cache too much
+      random : Math.random()
+    };
+    if (BotrUpload.resumeSupported()) {
+      data.resumable = 'true';
+    }
+    title = $.trim(title.val());
+
+    if (title != '') {
+      data.title = title;
+    }
+
+    $.ajax({
+      type : 'GET',
+      url : botr.api_proxy,
+      data : data,
+      dataType : 'json',
+      success : function (data) {
+        if (data && data.status == 'ok') {
+          var upload = new BotrUpload(data.link, data.session_id);
+          win.data('upload', upload);
+          upload.useForm(win.find('.botr-upload-file').get(0));
+          win.append(upload.getIframe());
+          upload.pollInterval = botr.upload_poll_interval;
+          upload.chunkSize = botr.upload_chunk_size;
+          upload.onProgress = function(bytes, total) {
+            var ratio = bytes / total;
+            var pct = Math.round(ratio * 1000) / 10;
+            var txt = "Uploading: " + pct + "%";
+            if(!upload._running) {
+              txt += " (paused)";
+            }
+            win.find('.botr-message').text(txt);
+            var progress = win.find('.botr-progress');
+            progress.stop().animate({'width': (progress.parent().width() * ratio)}, 400);
+          }
+          upload.onError = function(msg) {
+            win.find('.botr-message').text('Upload failed: ' + msg);
+            botr.reset_upload(win);
+          }
+          upload.onCompleted = function() {
+            win.remove();
+            botr.list();
+          }
+          win.find('.botr-message').text('Uploading...');
+          win.find('.botr-progress-bar').show();
+          
+          // Add the pause / resume button
+          if (data.session_id) {
+            var pause = $('<button>').addClass('botr-pause button-secondary').text('Pause');
+            pause.click(function() {
+              if(!upload._completed) {
+                if(upload._running) {
+                  upload.pause();
+                  win.removeClass('botr-busy');
+                  pause.text('Resume');
+                }
+                else {
+                  upload.start();
+                  win.addClass('botr-busy');
+                  pause.text('Pause');
+                }
+              }
+              return false;
+            });
+            win.find('.botr-upload-submit').hide().after(pause);
+          }
+          
+          setTimeout(function() { upload.start() }, 0);
         }
         else {
-          if (data.state == 'uploading') {
-            var ratio = data.received / data.size;
-          }
-          else if (data.state == 'starting') {
-            var ratio = 0;
-          }
-          else {
-            var ratio = 1;
-          }
-
-          var extra_width = Math.ceil((botr.total_progress_width - botr.min_progress_width) * ratio);
-          botr.widgets.progress.width(botr.min_progress_width + extra_width);
-          botr.widgets.progress.val(Math.ceil(ratio * 100) + '%');
+          var msg = data ? 'API error: ' + data.message : 'No response from API.';
+          win.find('.botr-message').text(msg);
+          botr.reset_upload(win);
         }
+      },
+      error : function (request, message, error) {
+        win.find('.botr-message').text("AJAX error: " + message);
+        botr.reset_upload(win);
       }
     });
+    return false;
   }
 };
 
-$(document).ready(function() {
+$(function() {
   botr.api_proxy = botr.plugin_url + '/proxy.php';
 
   botr.widgets = {
     box : $('#botr-video-box'),
     search : $('#botr-search-box'),
     list : $('#botr-video-list'),
-    file : $('#botr-upload-file'),
-    title : $('#botr-upload-title'),
-    browse : $('#botr-upload-browse'),
-    message : $('#botr-upload-message'),
-    button : $('#botr-upload-button'),
-    progress : $('#botr-progress-bar'),
+    button : $('#botr-upload-button')
   };
   // Check whether we are on the insert page or on the media page.
   botr.mediaPage = botr.widgets.box.hasClass('media-item');
@@ -537,7 +545,7 @@ $(document).ready(function() {
 
     $(this).select();
   });
-  
+
   botr.widgets.search.keydown(function(e) {
     // Ignore enter, but immediately submit
     if(e.keyCode == 13) {
@@ -573,18 +581,7 @@ $(document).ready(function() {
     }
   });
 
-  botr.uploader = new AjaxUpload(botr.widgets.browse, {
-    name : 'file',
-    autoSubmit : false,
-    responseType : 'json',
-    onChange : function (file, extension) {
-      botr.widgets.file.css('color', '').val(file);
-    },
-    // Hm, this function is not called either, probably also due to 302.
-    onComplete : function (file, response) {}
-  });
-
-  botr.widgets.button.click(botr.upload_video);
+  botr.widgets.button.click(botr.open_upload_window);
 
   botr.list();
 });

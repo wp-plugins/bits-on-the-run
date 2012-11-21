@@ -69,7 +69,7 @@ add_action('admin_notices', 'botr_show_login_notice');
 
 // Additions to the page head in the admin area
 function botr_admin_head() {
-  $ajaxupload_url = plugins_url('ajaxupload.js', __FILE__);
+  $ajaxupload_url = plugins_url('upload.js', __FILE__);
   $logic_url = plugins_url('logic.js', __FILE__);
   $style_url = plugins_url('style.css', __FILE__);
   $plugin_url = plugins_url('', __FILE__);
@@ -91,6 +91,13 @@ function botr_admin_head() {
 }
 add_action('admin_head', 'botr_admin_head');
 
+// Add JQuery-UI Draggable to the included scripts
+function botr_enqueue_scripts() {
+  wp_enqueue_script('jquery-ui-draggable');
+}
+
+add_action('admin_enqueue_scripts', 'botr_enqueue_scripts');
+
 // Add the video widget to the authoring page, if enabled in the settings
 function botr_add_video_box() {
   if(get_option('botr_show_widget') == 'true') {
@@ -110,29 +117,9 @@ function botr_widget_body() {
   </span>
   <div id='botr-list-wrapper'>
     <input type='text' value='Search videos' id='botr-search-box' />
-    <ul id='botr-video-list'>
-    </ul>
+    <ul id='botr-video-list'></ul>
   </div>
-  <fieldset id='botr-upload-video'>
-    <div class='botr-row'>
-      <label for='botr-upload-title'>Title</label>
-      <span>
-        <input type='text' id='botr-upload-title' name='botr-upload-title' />
-      </span>
-    </div>
-    <div class='botr-row'>
-      <label for='botr-upload-file'>File</label>
-      <span>
-        <a href='#' id='botr-upload-browse' class='button'>Choose file</a>
-        <input type='text' id='botr-upload-file' name='botr-upload-file' value='no file selected' disabled='disabled' />
-        <input type='text' id='botr-progress-bar' value='0%' readonly='readonly' />
-      </span>
-    </div>
-    <div class='botr-row'>
-        <p id='botr-upload-message'></p>
-        <button type='submit' id='botr-upload-button' class='button-primary'>Upload video</button>
-    </div>
-  </fieldset>
+  <button id='botr-upload-button' class='button-primary'>Upload a video...</button>
   <?php
 }
 

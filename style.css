@@ -1,130 +1,134 @@
 .botr-error {
-    color: red;
+  color: red;
+}
+
+#botr-video-box, #botr-video-box .inside {
+  background: url('logo.png') 8px 6px no-repeat;
 }
 
 #botr-video-box .inside {
-    padding: 0;
-    margin: 0;
-}
-
-#botr-list-wrapper {
-    margin: 6px;
+  margin: 0;
 }
 
 #botr-search-box {
-    width: 100%;
-    margin-bottom: 5px;
-    color: lightgray;
-    background: url(search.png) no-repeat right center;
-    padding-right: 20px;
+  width: 99%;
+  margin-bottom: 5px;
+  color: lightgray;
+  background: url('search.png') no-repeat right center;
+  padding-right: 20px;
+  margin: 4px;
 }
 
 #botr-search-box:focus {
-    color: black;
+  color: black;
+}
+
+#botr-video-list p {
+  margin-left: 5px;
 }
 
 #botr-video-list li {
-    position: relative;
-    display: block;
-    margin-bottom: 1px;
-    padding: 1px 0 4px 45px;
-    background-repeat: no-repeat;
-    background-position: left top;
-    height: 25px;
-    cursor: pointer;
+  background-position: left top;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  display: block;
+  height: 25px;
+  margin-bottom: -1px;
+  padding: 1px 0 4px 55px;
+  position: relative;
 }
 
 #botr-video-list li.botr-failed {
-    cursor: default;
+  cursor: default;
 }
 
 #botr-video-list li.botr-odd {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 #botr-video-list li.botr-even {
-    background-color: #e8e8e8;
+  background-color: #e9f2f8;
 }
 
 #botr-video-list li p {
-    padding-right: 7px;
-    height: 18px;
-    display: block;
-    overflow: hidden;
+  display: block;
+  height: 18px;
+  margin-left: 0;
+  margin-top: 4px;
+  overflow: hidden;
+  padding-right: 7px;
 }
 
 #botr-video-list button {
-    float: right;
-    margin: 2px;
-}
-
-#botr-upload-video {
-    width: auto;
-    margin: 0;
-    background-color: #e9f2f8;
-    border-top: 1px solid #e0e2e4;
-    padding: 6px;
-}
-
-#botr-upload-video .botr-row {
-    position: relative;
-    clear: left;
-    width: 266px;
-    height: 28px;
-}
-
-#botr-upload-video .botr-row label {
-    position: absolute;
-    width: 30px;
-    top: 8px;
-    left: 3px;
-    color: gray;
-}
-
-#botr-upload-video .botr-row span {
-    position: relative;
-    padding-left: 35px;
-}
-
-#botr-upload-title {
-    width: 228px;
-}
-
-#botr-upload-file {
-    width: 134px;
-    margin: 0;
+  float: right;
+  margin: 2px;
 }
 
 #botr-upload-button {
-    float: right;
-    margin-top: 3px;
-    margin-right: 11px;
+  margin: 11px;
 }
 
-#botr-upload-browse {
-    display: inline-block;
-    text-align: center;
-    width: 70px;
-}
-
-#botr-progress-bar {
-    background-color: #3a7ea2;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    display: none;
-}
-
-#botr-upload-message {
-    float: left;
-    width: 149px;
-}
-
-.botr-busy {
-    cursor: wait;
+.botr-busy * {
+  cursor: wait;
 }
 
 .botr-dashboard-link {
-    display: block;
-    margin: 6px;
+  display: block;
+  line-height: 34px;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.botr-upload-window {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 400px;
+  margin-left: -200px;
+  margin-top: -100px;
+  background: #eaeaea;
+  -webkit-box-shadow: 3px 3px 2px 0px #999;
+  box-shadow: 3px 3px 2px 0px #999;
+}
+
+.botr-upload-window .inside {
+  padding: 0 8px;
+}
+
+.botr-upload-window .botr-message {
+  margin-top: 12px;
+  margin-bottom: 6px;
+  min-height: 1.4em;
+}
+
+.botr-upload-window label {
+  display: inline-block;
+  width: 100px;
+}
+
+.botr-upload-window>h3 {
+  padding: 7px 10px;
+}
+
+.botr-upload-submit, .botr-pause {
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.botr-upload-window:hover>.handlediv {
+  background: url('close.png') no-repeat 6px 7px transparent;
+}
+
+.botr-progress-bar {
+  width: 200px;
+  height: 10px;
+  background: #fff;
+  display: none;
+}
+
+.botr-progress-bar > .botr-progress {
+  width: 0;
+  height: 10px;
+  background: #0074BD;
 }

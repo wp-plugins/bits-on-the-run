@@ -3,8 +3,8 @@ Contributors: LongTail Video
 Tags: bitsontherun, botr, video, media
 Donate link: http://www.bitsontherun.com
 Requires at least: 3.0
-Tested up to: 3.3.1
-Stable tag: 1.0
+Tested up to: 3.4.2
+Stable tag: 1.1
 
 Upload videos to and embed videos from the Bits on the Run platform.
 
@@ -22,7 +22,7 @@ Bits on the Run is an online video platform, developed by LongTail Video, built
 for website owners, web developers, and video producers to upload, manage,
 customize and publish online video content with ease.
 
-= Key Features =
+Key Features
 
 * Fast video streaming for playback in a video player, in both HTML5 and Flash modes
 * Inline search field available to locate specific videos within your video library
@@ -34,7 +34,7 @@ customize and publish online video content with ease.
 
 [Sign up for a free Bits on the Run account!](https://www.longtailvideo.com/bits-on-the-run/sign-up/)
 
-= Documentation =
+Documentation
 
 Full documentation on installation, setup and getting started can be found on
 our [Support Site](http://www.longtailvideo.com/support/bits-on-the-run/).
@@ -92,6 +92,11 @@ Yes, you can. In order to do this, simply write "playlist:" (without the quotes)
 in front of your search query in the widget.
 
 == Changelog ==
+
+= 1.1 =
+
+* Enabled resumable uploads if supported by the browser.
+* Various small bug fixes concerning browser compatibility.
 
 = 1.0 =
 
