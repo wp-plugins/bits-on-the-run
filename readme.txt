@@ -1,7 +1,6 @@
 === Bits on the Run ===
 Contributors: LongTail Video
 Tags: bitsontherun, botr, video, media
-Donate link: http://www.bitsontherun.com
 Requires at least: 3.0
 Tested up to: 3.4.2
 Stable tag: 1.1
