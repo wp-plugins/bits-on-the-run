@@ -4,7 +4,7 @@ Plugin Name: Bits on the Run
 Plugin URI: http://www.bitsontherun.com/
 Description: This plugin allows you to easily upload and embed videos using the Bits on the Run platform. The embedded video links can be signed, making it harder for viewers to steal your content.
 Author: LongTail Video
-Version: 1.1
+Version: 1.2
 */
 
 define('BOTR_PLUGIN_DIR', dirname(__FILE__));
@@ -119,6 +119,9 @@ function botr_widget_body() {
     <input type='text' value='Search videos' id='botr-search-box' />
     <ul id='botr-video-list'></ul>
   </div>
+  <select id='botr-player-select'>
+    <option value=''>Default Player</option>
+  </select>
   <button id='botr-upload-button' class='button-primary'>Upload a video...</button>
   <?php
 }
@@ -224,6 +227,11 @@ function botr_nr_videos_setting() {
 // The setting for the content mask
 function botr_content_mask_setting() {
   $content_mask = get_option('botr_content_mask');
+  if(!$content_mask) {
+    // An empty content mask, or the variable was somehow removed entirely
+    $content_mask = BOTR_CONTENT_MASK;
+    update_option('botr_content_mask', $content_mask);
+  }
   echo "<input name='botr_content_mask' id='botr_content_mask' type='text' value='$content_mask' class='regular-text' />";
   echo "<br />The <a href='http://www.longtailvideo.com/support/bits-on-the-run/21627/dns-mask-our-content-servers'>DNS mask</a> of the BOTR content server.";
 }
@@ -259,7 +267,7 @@ function botr_login_form() {
 <h2>Bits on the Run login</h2>
   
 <form method="post" action="">
-<p>In order to use the Bits on the Run plugin, it is required to log in.<br>
+<p>In order to use the Bits on the Run plugin, you are required to log in.<br>
 If you do not have an account yet, please <a href="<?php echo get_admin_url() . 'options-general.php?page=botr_signup'; ?>">sign up</a>.</p>
 <table class="form-table">
   
@@ -438,8 +446,8 @@ function botr_signup_form() {
 <th scope="row"></th>
 <td>
 <input type="checkbox" name="agree" id="botr_agree">
-<label for="botr_agree">I agree to the <a href="https://www.longtailvideo.com/bits-on-the-run/terms-and-conditions/">Terms of Service</a> 
-and the <a href="https://www.longtailvideo.com/bits-on-the-run/privacy-policy/">Privacy Policy</a></label>
+<label for="botr_agree">I agree to the <a href="http://www.longtailvideo.com/tos">Terms of Service</a> 
+and the <a href="http://www.longtailvideo.com/privacy">Privacy Policy</a></label>
 </td>
 </tr>
   
@@ -551,16 +559,22 @@ function botr_add_login_pages() {
 }
 add_action('admin_menu', 'botr_add_login_pages');
 
-// Replace the BotR quicktags with a JS embed code
-function botr_replace_quicktags($content) {
-    if (get_option('botr_login')) {
-        $regex = '/\[bitsontherun ([0-9a-z]{8})(?:[-_])?([0-9a-z]{8})?\]/si';
-        return preg_replace_callback($regex, "botr_create_js_embed", $content);
-    } else {
-        return $content;
-    }
+function botr_handle_shortcode($atts) {
+  $login = get_option('botr_login');
+  if (empty($login)) {
+      return '';
+  }
+  if (array_keys($atts) == array(0)) {
+      $regex = '/([0-9a-z]{8})(?:[-_])?([0-9a-z]{8})?/i';
+      $m = array();
+      if (preg_match($regex, $atts[0], $m)) {
+          return botr_create_js_embed($m);
+      }
+  }
+  // Invalid shortcode
+  return '';
 }
-add_filter('the_content', 'botr_replace_quicktags');
+add_shortcode('bitsontherun', 'botr_handle_shortcode');
 
 // Create the JS embed code for the BotR player
 // $arguments is an array:

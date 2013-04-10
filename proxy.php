@@ -17,6 +17,7 @@ $BOTR_PROXY_METHODS = array(
     '/channels/list',
     '/videos/create',
     '/videos/thumbnails/show',
+    '/players/list',
 );
 
 function botr_proxy() {

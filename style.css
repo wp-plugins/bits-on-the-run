@@ -64,6 +64,10 @@
   margin: 2px;
 }
 
+#botr-player-select {
+  width: 100%;
+}
+
 #botr-upload-button {
   margin: 11px;
 }
@@ -117,7 +121,7 @@
 }
 
 .botr-upload-window:hover>.handlediv {
-  background: url('close.png') no-repeat 6px 7px transparent;
+  background: url('close.png') no-repeat 6px 7px transparent !important;
 }
 
 .botr-progress-bar {

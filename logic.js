@@ -6,7 +6,7 @@ botr = {
 
   // Poll server every given number of milliseconds for upload progress info.
   upload_poll_interval : 2000,
-  
+
   // The chunk size for resumable uploads.
   upload_chunk_size : 2 * 1024 * 1024,
 
@@ -55,7 +55,10 @@ botr = {
 
   // Insert the quicktag into the editor box.
   insert_quicktag : function (video_hash) {
-    var quicktag = '[bitsontherun ' + video_hash  + ']';
+    var hashes = video_hash;
+    if(botr.widgets.playerselect.val())
+    hashes += '-' + botr.widgets.playerselect.val();
+    var quicktag = '[bitsontherun ' + hashes  + ']';
     if(botr.mediaPage) {
       parent.send_to_editor(quicktag);
     }
@@ -252,7 +255,7 @@ botr = {
     });
   },
 
-  list: function(query, channels, videos, nr_videos) {
+  list : function(query, channels, videos, nr_videos) {
     if (query === undefined) {
       query = $.trim(botr.widgets.search.val());
     }
@@ -308,6 +311,29 @@ botr = {
       doDescribeEmpty();
     }
   },
+  
+  list_players : function () {
+    var params = {
+      method : '/players/list',
+      random : Math.random()
+    }
+
+    $.ajax({
+      type : 'GET',
+      url : botr.api_proxy,
+      data : params,
+      dataType : 'json',
+      success : function (data) {
+        if (data && data.status == 'ok') {
+          botr.widgets.playerselect.empty().append($('<option>').val('').text("Default player"));
+          for(var p in data.players) {
+            var player = data.players[p];
+            botr.widgets.playerselect.append($('<option>').val(player.key).text(player.name));
+          }
+        }
+      }
+    });
+  },
 
   // Poll API for status of thumbnails.
   poll_thumb_progress : function () {
@@ -360,7 +386,7 @@ botr = {
       botr.thumb_timer_id = null;
     }
   },
-  
+
   // Open a small window for file uploads
   open_upload_window : function() {
     var win = $('<div>')
@@ -388,6 +414,10 @@ botr = {
          </div>');
     win.find('form')
       .submit(function(e) {
+        if(win.find('input[type="submit"]').attr('disabled') == 'disabled') {
+          // User probably pressed enter before selecting a file
+          return false;
+        }
         botr.upload_video(win);
         return false;
       })
@@ -414,7 +444,7 @@ botr = {
     win.find('.botr-upload-file').val('').removeAttr('disabled');
     win.find('.botr-upload-submit').show();
     win.find('.botr-pause').remove();
-    
+
     win.removeClass('botr-busy');
   },
 
@@ -424,7 +454,7 @@ botr = {
     win.addClass('botr-busy');
 
     if(!$.browser.msie) {
-      // IE will not submit the form if even one property of the file input has changed.
+      // IE (at least until 8) will not submit the form if even one attribute of the file input has changed.
       win.find('input').attr('disabled', 'disabled');
     }
     else {
@@ -481,7 +511,7 @@ botr = {
           }
           win.find('.botr-message').text('Uploading...');
           win.find('.botr-progress-bar').show();
-          
+
           // Add the pause / resume button
           if (data.session_id) {
             var pause = $('<button>').addClass('botr-pause button-secondary').text('Pause');
@@ -502,7 +532,7 @@ botr = {
             });
             win.find('.botr-upload-submit').hide().after(pause);
           }
-          
+
           setTimeout(function() { upload.start() }, 0);
         }
         else {
@@ -527,7 +557,8 @@ $(function() {
     box : $('#botr-video-box'),
     search : $('#botr-search-box'),
     list : $('#botr-video-list'),
-    button : $('#botr-upload-button')
+    button : $('#botr-upload-button'),
+    playerselect : $('#botr-player-select')
   };
   // Check whether we are on the insert page or on the media page.
   botr.mediaPage = botr.widgets.box.hasClass('media-item');
@@ -584,6 +615,7 @@ $(function() {
   botr.widgets.button.click(botr.open_upload_window);
 
   botr.list();
+  botr.list_players();
 });
 
 })(jQuery);
