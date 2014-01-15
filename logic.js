@@ -58,7 +58,7 @@ botr = {
     var hashes = video_hash;
     if(botr.widgets.playerselect.val())
     hashes += '-' + botr.widgets.playerselect.val();
-    var quicktag = '[bitsontherun ' + hashes  + ']';
+    var quicktag = '[jwplatform ' + hashes  + ']';
     if(botr.mediaPage) {
       parent.send_to_editor(quicktag);
     }
@@ -394,7 +394,7 @@ botr = {
       .appendTo('body')
       .html(
         '<div class="handlediv"><br /></div>\
-         <h3 class="hndle"><span>Bits on the Run Video Upload</span></h3>\
+         <h3 class="hndle"><span>JW Platform Video Upload</span></h3>\
          <div class="inside">\
            <form action="" method="post" enctype="multipart/form-data">\
              <p>\

@@ -1,6 +1,5 @@
 /**
- * Bits on the Run JavaScript Uploader version 1.01
- * Written by Tom Boshoven
+ * JW Platform JavaScript Uploader version 1.01
  * 
  * Inspired by Resumable.js and Valums AJAX Upload (version 1).
  */

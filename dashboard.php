@@ -1,7 +1,7 @@
 <?php
 
-// The URL to the Bits on the Run dashboard
-define('BOTR_DASHBOARD_URL', 'dashboard.bitsontherun.com');
+// The URL to the JW Platform dashboard
+define('BOTR_DASHBOARD_URL', 'dashboard.jwplatform.com');
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 $path = dirname(__FILE__);

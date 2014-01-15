@@ -1,25 +1,23 @@
-=== Bits on the Run ===
+=== JW Platform ===
 Contributors: LongTail Video
-Tags: bitsontherun, botr, video, media
+Tags: jwplayer, jwplatform, bitsontherun, botr, video, media
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 1.2
+Stable tag: 1.3
 
-Upload videos to and embed videos from the Bits on the Run platform.
+Upload videos to and embed videos from the JW Platform.
 
 == Description ==
 
-The Bits on the Run plugin for WordPress provides publishers with the ability to
-manage the videos they host using the Bits on the Run platform, directly within
+The JW Platform plugin for WordPress provides publishers with the ability to
+manage the videos they host using the JW Platform, directly within
 the WordPress CMS. Video uploads and embeds can be performed directly within the
 Wordpress post / page editor. This custom plugin has been built by
 LongTail Video, the creators of the JW Player for Flash and HTML5. It provides
 users with an easy way to manage and embed their videos - hosted in
-Bits on the Run - and publish them to WordPress, using the JW Player.
+JW Platform - and publish them to WordPress, using the JW Player.
 
-Bits on the Run is an online video platform, developed by LongTail Video, built
-for website owners, web developers, and video producers to upload, manage,
-customize and publish online video content with ease.
+JW Platform is an online video platform, developed by the makers of JW Player, built for website owners, web developers, and video producers to upload, manage, customize and publish online video content with ease.
 
 Key Features
 
@@ -31,7 +29,7 @@ Key Features
 * Quicktags to locate custom players
 * Support for uploading videos using our custom widget
 
-[Sign up for a free Bits on the Run account!](https://www.longtailvideo.com/bits-on-the-run/sign-up/)
+[Sign up for a free JW Platform account!](https://www.longtailvideo.com/bits-on-the-run/sign-up/)
 
 Documentation
 
@@ -50,13 +48,13 @@ Note: This module requires PHP5.
 1. Unpack the zip-file and put the resulting folder in the wp-content/plugins
    directory of your Wordpress install.
 2. Login as Wordpress admin.
-3. Go the the plugins page, the Bits on the Run plugin should be visible.
+3. Go the the plugins page, the JW Platform plugin should be visible.
    Click "activate" to enable the plugin.
 4. Click the "log in" link on the media settings page to log into your
-   Bits on the Run account. Alternatively, click "sign up" to create a new
+   JW Platform account. Alternatively, click "sign up" to create a new
    account directly from Wordpress.
 5. Change the settings to your liking. Don't forget to enable secure content in
-   your Bits on the Run account if you want to make use of the signed links.
+   your JW Platform account if you want to make use of the signed links.
    It is also possible to enable the widget as a box inside the authoring
    environment, in addition to the "Add media" window.
 
@@ -66,7 +64,7 @@ administrator.
 
 == Screenshots ==
 
-1. You can start uploading and embedding videos with the new Bits on the Run
+1. You can start uploading and embedding videos with the new JW Platform
    widget that will appear in the "add media" window. If you enabled the
    "Show widget" setting, the widget will also appear in the side bar when
    you're editing a post. For more detailed instructions, 
@@ -77,7 +75,7 @@ administrator.
 = Can I override the default player for a specific video? =
 
 Yes, you can. Simply append a dash and the corresponding player key to video key
-in the quicktag. For example: [bitsontherun MdkflPz7-35rdi1pO].
+in the quicktag. For example: [jwplatform MdkflPz7-35rdi1pO].
 
 = Does this plugin work with caching solutions like WP-Supercache? =
 
@@ -91,6 +89,12 @@ Yes, you can. In order to do this, simply write "playlist:" (without the quotes)
 in front of your search query in the widget.
 
 == Changelog ==
+
+= 1.3 =
+
+* Rebranding of Bits on the Run to JW Platform
+* Removed in-application signup.
+* Fixed bug with responsive player size.
 
 = 1.2 =
 

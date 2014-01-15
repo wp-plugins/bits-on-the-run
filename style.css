@@ -2,7 +2,7 @@
   color: red;
 }
 
-#botr-video-box, #botr-video-box .inside {
+#botr-video-box .inside {
   background: url('logo.png') 8px 6px no-repeat;
 }
 
