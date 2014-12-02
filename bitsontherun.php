@@ -4,7 +4,7 @@ Plugin Name: JW Platform Plugin
 Plugin URI: http://www.jwplayer.com/
 Description: This plugin allows you to easily upload and embed videos using the JW Platform (formerly known as Bits on the Run). The embedded video links can be signed, making it harder for viewers to steal your content.
 Author: JW Player
-Version: 1.3
+Version: 1.3.1
 */
 
 define('BOTR_PLUGIN_DIR', dirname(__FILE__));
@@ -112,7 +112,7 @@ add_action('admin_menu', 'botr_add_video_box');
 function botr_widget_body() {
   ?>
   <span class='botr-dashboard-link'>
-    <a href='<?php echo plugins_url('dashboard.php', __FILE__); ?>'>Open Dashboard</a>
+    <a href='http://dashboard.jwplatform.com'>Open Dashboard</a>
   </span>
   <div id='botr-list-wrapper'>
     <input type='text' value='Search videos' id='botr-search-box' />

@@ -3,7 +3,7 @@ Contributors: LongTail Video
 Tags: jwplayer, jwplatform, bitsontherun, botr, video, media
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 1.3
+Stable tag: 1.3.1
 
 Upload videos to and embed videos from the JW Platform.
 
@@ -89,6 +89,10 @@ Yes, you can. In order to do this, simply write "playlist:" (without the quotes)
 in front of your search query in the widget.
 
 == Changelog ==
+
+= 1.3.1 =
+
+* Removed direct login, because this is no longer working correctly.
 
 = 1.3 =
 
