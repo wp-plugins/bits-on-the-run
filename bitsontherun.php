@@ -4,7 +4,7 @@ Plugin Name: JW Platform Plugin
 Plugin URI: http://www.jwplayer.com/
 Description: This plugin allows you to easily upload and embed videos using the JW Platform (formerly known as Bits on the Run). The embedded video links can be signed, making it harder for viewers to steal your content.
 Author: JW Player
-Version: 1.3.1
+Version: 1.3.2
 */
 
 define('BOTR_PLUGIN_DIR', dirname(__FILE__));
@@ -245,7 +245,8 @@ function botr_content_mask_setting() {
     update_option('botr_content_mask', $content_mask);
   }
   echo "<input name='botr_content_mask' id='botr_content_mask' type='text' value='$content_mask' class='regular-text' />";
-  echo "<br />The <a href='http://www.longtailvideo.com/support/bits-on-the-run/21627/dns-mask-our-content-servers'>DNS mask</a> of the BOTR content server.";
+  echo "<br />The <a href='http://www.longtailvideo.com/support/bits-on-the-run/21627/dns-mask-our-content-servers'>DNS mask</a> of the BOTR content server. ";
+  echo "Please note <strong>a content mask will make https video embeds impossible</strong>.";
 }
 
 // The setting which determines whether we show the widget on the authoring page (or only in the "Add media" window)
@@ -477,18 +478,14 @@ function botr_create_js_embed($arguments) {
   $content_mask = botr_get_content_mask();
   $timeout = intval(get_option('botr_timeout'));
   $path = "players/$video_hash-$player_hash.js";
+  $protocol = (is_ssl() && $content_mask == BOTR_CONTENT_MASK) ? 'https' : 'http';
   if($timeout < 1) {
-    $url = "http://$content_mask/$path";
+    $url = "$protocol://$content_mask/$path";
   } else {
     $api_secret = get_option('botr_api_secret');
     $expires = time() + 60 * $timeout;
     $signature = md5("$path:$expires:$api_secret");
-    if(is_ssl()) {
-      $url = "https://$content_mask/$path?exp=$expires&sig=$signature";
-    }
-    else {
-      $url = "http://$content_mask/$path?exp=$expires&sig=$signature";
-    }
+    $url = "$protocol://$content_mask/$path?exp=$expires&sig=$signature";
   }
   return "<script type='text/javascript' src='$url'></script>";
 }
